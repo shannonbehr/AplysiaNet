@@ -1,0 +1,13 @@
+Biomechanical Aplysia feeding model
+Author: Shannon Stork
+
+----------------------------------------------------------------------------------------
+23 Feb 2018
+The main class, AplysiaNet, currently creates an Interface. The Interface class supports
+all functionality; entry of all 4 stimulus parameters (chemical start, chemical end,
+mechanical start, and mechanical end), checks that the entered values are valid, and
+prepares to send those values to the network. The Neuron class is not yet started. Much
+time this week was spent meeting with collaborators and redefining a poorly explained
+aspect of the project; the design document has been updated to reflect these changes.
+Also, a circuit diagram was proposed, which can also be found in the design doc.
+----------------------------------------------------------------------------------------
