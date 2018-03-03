@@ -2,6 +2,20 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+2 March 2018
+Neurons have been mostly implemented. Much of the code was adapted from Tate Keller's
+C++ model in hopes that making very similar design decisions will minimize problems
+later synchronizing the two chunks of the neural network. This code has not been
+extensively tested, and many variables will problably move over to AplysiaNet once the
+network starts functioning. However, nothing major will need to be added. The second
+target for the week was to start implementing synapses. Dr. Chiel, Jeff Gill, and I
+are discussing the best ways to do this, so we anticipate the actual coding to start
+early next week. Efforts are still being made to understand Greg Sutton's code for the
+biomechanical model since he is no longer on campus, and some comments are more helpful
+than others.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 23 Feb 2018
 The main class, AplysiaNet, currently creates an Interface. The Interface class supports
 all functionality; entry of all 4 stimulus parameters (chemical start, chemical end,
