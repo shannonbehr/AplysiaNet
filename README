@@ -2,6 +2,18 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+9 March 2018
+Synapse class has been added and Neurons have been modified so the AplysiaNet is now
+a class and controls synchronizing the different parts of the circuit. Most time this
+week was spent making design decisions for the synapse; a simple set of equations was
+devised, as well as a set of differential equations to replace the simple ones if time
+near the end of the project. Since I am slightly behind due to unexpected complexity
+and midterms, I will catch up over break and at least have Neuron and Synapse working,
+if I do not have time to commit more code later today. At this point, though, design
+of Neuron and Synapse is complete, just not implementation.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 2 March 2018
 Neurons have been mostly implemented. Much of the code was adapted from Tate Keller's
 C++ model in hopes that making very similar design decisions will minimize problems

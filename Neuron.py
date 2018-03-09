@@ -1,23 +1,16 @@
 class Neuron:
 
     # This method initializes the neuron by setting the four IK parameters (a, b, c, and d) and the step size.
-    def __init__(self, a, b, c, d):
+    def __init__(self, a, b, c, d, input, step_size, duration, period_length, time):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
-
-        # The step size value is that used by Greg Sutton; the same value was chosen here to integrate the two models.
-        self.step_size = 0.000008
-
-        # The model is set up to run for 8.5 seconds
-        self.duration = 8.5
-
-        # The frequency will be evaluated every 0.25 seconds
-        self.period_length = 0.25
-
-        # The model starts at time = 0 seconds
-        self.time = 0
+        self.input = input
+        self.step_size = step_size
+        self.duration = duration
+        self.period_length = period_length
+        self.time = time
 
         # The potential (v)  and recovery (u) parameters are initialized as described in the IK model.
         self.v = -70
@@ -26,11 +19,19 @@ class Neuron:
         # An array is initialized to hold the 43 frequency calculations, one for each 0.2 second interval.
         self.frequency = []
 
-    # This administers a current, i, to the neuron
-    # WRITE THIS METHOD!!
-    def stimulate(self, i):
-        self.i = i
-        return
+        # This will hold the outputs from synapses for use in finding the next current
+        self.output = []
+
+    # Returns the output as an array of currents at each time step
+    def get_output(self):
+        return self.output
+
+    # Sets the time to the given value and the current at this time to the given current
+    def update(self, time, i):
+        self.time = time
+        self.input[time] = i
+        #stimulate the neuron here
+        #return the current
 
     # This method updates the u and v parameter values using euler's method.
     def run_eulers_method(self):
@@ -77,11 +78,11 @@ class Neuron:
 
         # If we are still in the current period, count the spikes
         if end_time > current_time:
-            if (spike_count == 0) and (self.i >= 30):
+            if (spike_count == 0) and (self.input[current_time] >= 30):
                 first_spike = current_time
                 last_spike = current_time
                 spike_count += 1
-            elif (spike_count > 0) and (self.i >= 30):
+            elif (spike_count > 0) and (self.input[current_time] >= 30):
                 last_spike = current_time
                 spike_count +=1
 
@@ -116,3 +117,5 @@ class Neuron:
         # Error
         return -1
 
+    def get_next_current(self, time):
+        return self.input[time + 1] + self.output[time]
