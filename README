@@ -2,6 +2,16 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+23 March 2018 Commit 2
+After much grief, I figured out the solution to the stimulation issue. It has been
+fixed. The sample circuit is very unstable because of the parameters, but it generates
+numerical output, some of which actually makes sense; -65 is the resting potential,
+and the output in the absense of input was sometimes -65. At some time steps the output
+explodes; next week I should be able to figure out better parameter values. Things
+are completely back on target.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 23 March 2018
 Neuron and synapse are implemented except for the stimulation itself, which I am not
 sure how to do. I spent quite a while researching and asking around, but I will have to

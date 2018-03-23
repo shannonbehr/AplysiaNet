@@ -42,8 +42,9 @@ class Neuron:
     def update(self, time, i):
         self.time = time
         self.input[(int)(time/self.period_length)] = i
-        #stimulate the neuron here
-        #return the current
+        self.membrane_potential_dt()
+        self.membrane_recovery_dt()
+        self.output[(int)(time/self.period_length)] = self.v
 
     # This method updates the u and v parameter values using euler's method.
     def run_eulers_method(self):
@@ -64,7 +65,7 @@ class Neuron:
         # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
         # 1000 to convert from ms to s.
         else:
-            self.v = self.eulers_method(self.v, (((0.04 * self.v^2) + (5 * self.v) + 140 - self.u + self.input[self.time]) * 1000))
+            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input[(int)(self.time/self.period_length)]) * 1000))
         return
 
     # This method sets the membrane recovery after euler's method. The following code was adapted from Tate Keller:
