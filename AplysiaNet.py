@@ -1,4 +1,6 @@
 from Interface import Interface
+from Neuron import Neuron
+from Synapse import Synapse
 from tkinter import *
 
 class AplysiaNet:
@@ -6,7 +8,10 @@ class AplysiaNet:
     def __init__(self):
         root = Tk()
         interface = Interface(root)
-        root.mainloop()
+        #root.mainloop()
+        while interface.get_status() == 'running':
+            root.update()
+        self.input = interface.get_input()
 
         # The step size value is that used by Greg Sutton; the same value was chosen here to integrate the two models.
         self.step_size = 0.000008
@@ -29,23 +34,54 @@ class AplysiaNet:
         # This will store the synapses in the circuit
         self.synapses = []
 
-    # Later, get inputs from interface
+    def set_neurons(self, neurons):
+        self.neurons = neurons
+
+    def set_synapses(self, synapses):
+        self.synapses = synapses
 
     def run(self):
-        for index in range(0, int(self.time + 1)):
+        for index in range(0, (int)((1 / self.period_length)*(self.duration))):
             for neuron in self.neurons:
                 neuron.update(self.time, neuron.get_next_current(self.time))
+            for synapse in synapses:
+                synapse.update(self.time)
+            self.time = self.time + self.period_length
         for neuron in self.neurons:
+            print(neuron.get_output())
             return neuron.get_output()
 
     # Generates an array of chemical or mechanical input to a neuron given stimulus start and end times
-    def handleInputs(self, start, end, storage):
-        for index in range(0, (int)(self.time + 1)):
-            if index < start or index > end:
+    def handle_inputs(self, start, end, storage):
+        for index in range(0, (int)((1 / self.period_length)*(self.duration))):
+            if index*self.period_length < start or index*self.period_length > end:
                 storage[index] = 0
             else:
                 storage[index] = self.current
 
-
+# Creates the network.
 network = AplysiaNet()
 
+# This code gets the input from the user and translates into an input array for the network.
+inputs = network.input
+chem_input = []
+mech_input = []
+neuron2_input = []
+for i in range (0, 34):
+    chem_input.append(0)
+    mech_input.append(0)
+    neuron2_input.append(0)
+network.handle_inputs(inputs[0], inputs[1], chem_input)
+network.handle_inputs(inputs[2], inputs[3], mech_input)
+
+# This code builds the circuit. For now, it is a test circuit with two typical IK neurons and a single excitatory synapse.
+neuron1 = Neuron(0.006, 0.25, -65, 8, chem_input, 0.25, 0.25, 0)
+neuron2 = Neuron(0.006, 0.25, -65, 8, neuron2_input, 0.25, 0.25, 0)
+synapse = Synapse(neuron1, neuron2, 1, 10, 55, 0.25, 0)
+neurons = [neuron1, neuron2]
+synapses = [synapse]
+
+# The neurons and synapses are given to the network, and the simulation runs.
+network.set_neurons(neurons)
+network.set_synapses(synapses)
+network.run()

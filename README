@@ -2,7 +2,20 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
-<<<<<<< HEAD
+23 March 2018
+Neuron and synapse are implemented except for the stimulation itself, which I am not
+sure how to do. I spent quite a while researching and asking around, but I will have to
+wait to get a meeting with my superiors to get a solid answer. A lot of debugging
+was accomplished, and a test circuit of two neurons and an excitatory synapse was
+built. The circuit does little due to the stimulation issue, but it behaves as expected
+given that the currents are not changing. The individual methods in the neuron and
+synapse classes all seem to work. The neuron class now handles more synchronization,
+and the interface actually passes the user input to the network. The input is trans-
+lated into current at each time step and given to one of the test neurons. The
+stimulation issue should be fixed by next week. Otherwise, everything is back on target.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 9 March 2018
 Synapse class has been added and Neurons have been modified so the AplysiaNet is now
 a class and controls synchronizing the different parts of the circuit. Most time this
@@ -15,8 +28,6 @@ of Neuron and Synapse is complete, just not implementation.
 ----------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------
-=======
->>>>>>> fd6598d68c8f9e84be3d22f8d8ea7cccb4487d6a
 2 March 2018
 Neurons have been mostly implemented. Much of the code was adapted from Tate Keller's
 C++ model in hopes that making very similar design decisions will minimize problems

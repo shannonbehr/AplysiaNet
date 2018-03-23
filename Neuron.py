@@ -1,14 +1,13 @@
 class Neuron:
 
     # This method initializes the neuron by setting the four IK parameters (a, b, c, and d) and the step size.
-    def __init__(self, a, b, c, d, input, step_size, duration, period_length, time):
+    def __init__(self, a, b, c, d, input, step_size, period_length, time):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
         self.input = input
         self.step_size = step_size
-        self.duration = duration
         self.period_length = period_length
         self.time = time
 
@@ -21,15 +20,28 @@ class Neuron:
 
         # This will hold the outputs from synapses for use in finding the next current
         self.output = []
+        for i in range(0, 34):
+            self.output.append(0)
+
+        # Since the biokinetic model always runs for 8.5 seconds, duration has been set to 8.5.
+        self.duration = 8.5
 
     # Returns the output as an array of currents at each time step
     def get_output(self):
         return self.output
 
+    # Returns the input array
+    def get_input(self):
+        return self.input
+
+    # Sets the input array to the given input array
+    def set_input(self, input):
+        self.input = input
+
     # Sets the time to the given value and the current at this time to the given current
     def update(self, time, i):
         self.time = time
-        self.input[time] = i
+        self.input[(int)(time/self.period_length)] = i
         #stimulate the neuron here
         #return the current
 
@@ -52,7 +64,7 @@ class Neuron:
         # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
         # 1000 to convert from ms to s.
         else:
-            self.v = self.eulers_method(self.v, (((0.04 * self.v^2) + (5 * self.v) + 140 - self.u + self.i) * 1000))
+            self.v = self.eulers_method(self.v, (((0.04 * self.v^2) + (5 * self.v) + 140 - self.u + self.input[self.time]) * 1000))
         return
 
     # This method sets the membrane recovery after euler's method. The following code was adapted from Tate Keller:
@@ -117,5 +129,9 @@ class Neuron:
         # Error
         return -1
 
+    # This method returns the input current at the next time step.
     def get_next_current(self, time):
-        return self.input[time + 1] + self.output[time]
+        if (int)(time/self.period_length) + 1 < (int)((1 / self.period_length)*(self.duration)):
+            return self.input[(int)(time/self.period_length) + 1] + self.output[(int)(time/self.period_length)]
+        else:
+            return self.output[(int)(time/self.period_length)]

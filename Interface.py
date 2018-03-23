@@ -5,9 +5,12 @@ class Interface:
     # The constructor. Currently, only standard mode is supported.
     # Args: Tk master
     def __init__(self, master):
+
+        self.status = 'running'
+
         # Titles the main window
         self.master = master
-        master.title("Aplysia Feeding Circuit Simulation")
+        master.title('Aplysia Feeding Circuit Simulation')
 
         # Displays all of the initial text
         self.label = Label(master, text='Input: Please enter values between 0 and 8.5.')
@@ -40,6 +43,14 @@ class Interface:
         self.close_button = Button(master, text='Close', command=master.quit)
         self.close_button.grid(row = 5, column = 5)
 
+    # This gets the status of the interface, either 'running' if no valid inputs have been entered or 'complete.'
+    def get_status(self):
+        return self.status
+
+    # This gets the valid start and end times entered by the user in list form.
+    def get_input(self):
+        return self.input
+
     # This will eventually pass the stored input to AplysiaNet. Currently, it prints "running simulation."
     def run(self):
         self.error_label1.grid_forget()
@@ -71,6 +82,8 @@ class Interface:
 
         # If everything is valid, the simulation can continue running.
         else:
+            self.status = 'complete'
+            self.input = [self.chem_start, self.chem_end, self.mech_start, self.mech_end]
             return
 
     # This method returns true if the given pair of inputs is invalid or false otherwise. It also shows error messages.
