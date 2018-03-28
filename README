@@ -2,6 +2,15 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+28 March 2018
+This is a midweek commit; many synapse and synchronization bugs were fixed, and the
+simple circuit works now. I discovered a new bug regarding the number of time steps
+required and my current system's inability to store all the values. I have several
+ideas of how to fix this, but I wanted to upload a clean copy before messing with the
+core of the program too much.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 23 March 2018 Commit 2
 After much grief, I figured out the solution to the stimulation issue. It has been
 fixed. The sample circuit is very unstable because of the parameters, but it generates

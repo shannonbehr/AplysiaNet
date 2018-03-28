@@ -29,5 +29,8 @@ class Synapse:
         self.time = time
         self.set_membrane_voltage()
         neuron_input = self.second_neuron.get_input()
+        neuron_output = self.first_neuron.get_output()
+        index = (int)(self.time/self.period_length)
+        neuron_input[(int)(self.time / self.period_length)] += neuron_output[index]
         neuron_input[(int)(self.time/self.period_length)] += self.i_syn()
         self.second_neuron.set_input(neuron_input)

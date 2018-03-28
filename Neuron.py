@@ -1,12 +1,12 @@
 class Neuron:
 
     # This method initializes the neuron by setting the four IK parameters (a, b, c, and d) and the step size.
-    def __init__(self, a, b, c, d, input, step_size, period_length, time):
+    def __init__(self, a, b, c, d, input_array, step_size, period_length, time):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
-        self.input = input
+        self.input_array = input_array
         self.step_size = step_size
         self.period_length = period_length
         self.time = time
@@ -32,16 +32,18 @@ class Neuron:
 
     # Returns the input array
     def get_input(self):
-        return self.input
+        return self.input_array
 
     # Sets the input array to the given input array
-    def set_input(self, input):
-        self.input = input
+    def set_input(self, input_array):
+        self.input_array = input_array
 
     # Sets the time to the given value and the current at this time to the given current
     def update(self, time, i):
         self.time = time
-        self.input[(int)(time/self.period_length)] = i
+        i = self.input_array[(int)(time/self.period_length) - 1]
+        #print(self.input_array)
+        #print(i)
         self.membrane_potential_dt()
         self.membrane_recovery_dt()
         self.output[(int)(time/self.period_length)] = self.v
@@ -65,7 +67,8 @@ class Neuron:
         # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
         # 1000 to convert from ms to s.
         else:
-            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input[(int)(self.time/self.period_length)]) * 1000))
+            # Changed index into input array to index - 1 since time has already been updated
+            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input_array[(int)(self.time/self.period_length) - 1]) * 1000))
         return
 
     # This method sets the membrane recovery after euler's method. The following code was adapted from Tate Keller:
@@ -80,6 +83,8 @@ class Neuron:
             self.u = self.eulers_method(self.u, ((self.a * ((self.b * self.v) - self.u)) * 1000))
         return
 
+    # EDIT 3/28: This method will be rewritten if needed but possibly just deleted. Inputs might be passed as current
+    # instead, rendering the conversion to firing frequencies unnecessary.
     # This method takes in the start and end time of a period and calculates the average frequency by counting spikes.
     # A spike is defined as any point where the current, i, meets or exceeds 30.
     # This method is a different, hopefully improved version of Tate Keller's implementation.
@@ -91,11 +96,11 @@ class Neuron:
 
         # If we are still in the current period, count the spikes
         if end_time > current_time:
-            if (spike_count == 0) and (self.input[current_time] >= 30):
+            if (spike_count == 0) and (self.input_array[current_time] >= 30):
                 first_spike = current_time
                 last_spike = current_time
                 spike_count += 1
-            elif (spike_count > 0) and (self.input[current_time] >= 30):
+            elif (spike_count > 0) and (self.input_array[current_time] >= 30):
                 last_spike = current_time
                 spike_count +=1
 
@@ -133,6 +138,6 @@ class Neuron:
     # This method returns the input current at the next time step.
     def get_next_current(self, time):
         if (int)(time/self.period_length) + 1 < (int)((1 / self.period_length)*(self.duration)):
-            return self.input[(int)(time/self.period_length) + 1] + self.output[(int)(time/self.period_length)]
+            return self.input_array[(int)(time/self.period_length) + 1] + self.output[(int)(time/self.period_length)]
         else:
             return self.output[(int)(time/self.period_length)]
