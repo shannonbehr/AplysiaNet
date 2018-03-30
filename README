@@ -2,6 +2,44 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+30 March 2018
+The biggest change this week was changing the model from calculating every 0.25 seconds
+to calculating every 0.000008 seconds. This brought some pretty major scaleability
+challenges, and I'm not sure that my current solution is permanent. This also exposed
+some numerical instability not noticible in the small-scale test with fewer
+calculations. I have thus decided to hold off on adding more neurons/synapses to the
+model until I figure these things out. Here are the tests I am ultimately trying to
+pass, courtesy of a mentor:
+1. With no input, the neuron should stay at resting potential. While it does not fire,
+it depolarizes slightly. I've done quite a bit of testing but can't quite figure out
+why, so I am going to consult with my peers. I think fixing this might help later tests.
+2. With the synapse off, neurons can be stimulated to fire. This seems to work, but I
+want to test the firing patterns more and possibly adjust the parameters again.
+3. A spontaneously bursting neuron should be inhibited with negative current injection.
+I haven't tested this yet, but I am thinking of adding a simple toggle switch to my
+GUI so users can make the current excitatory or inhibitory for each input. Only
+excitatory input is presently supported.
+The final two tests involve synapses.
+4. An excitatory synapse (defined by its parameters) should stimulate the postsynaptic
+neuron. This works, but again, I want to test further and adjust if needed. The param-
+eters that currently incite proper behavior are not biologically accurate, and I'd like
+to fix this rather than just putting in the value that works.
+5. An inhibitory synapse (defined by its parameters) should inhibit. Again, this seems
+to work, but the parameters aren't right.
+The other major fix this week was the synapses. Last week, they actually didn't do
+anything, and since I still got reasonable output, I thought they were working. I
+tested them more thouroughly this week, found the bug, and fixed it. The only issue
+now is the parameters.
+I am worried that this will be way too slow with the full size circuit. Rather than
+overcomplicating things by building a larger test circuit, as indicated in my targets,
+I would like to address the 5 tests and try to make things run faster next week.
+Note to the grader: I am officially past the point of generating large chunks of code.
+Most of my progress now relies on small adjustments and parameter fitting, so I hope
+this document provides sufficient information as to what I've been doing. If you want
+more detail, please let me know! I am happy to explain as much as I can.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 28 March 2018
 This is a midweek commit; many synapse and synchronization bugs were fixed, and the
 simple circuit works now. I discovered a new bug regarding the number of time steps

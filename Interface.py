@@ -92,7 +92,7 @@ class Interface:
         flag = 0
 
         # Checks if start is after end
-        if start >= end:
+        if start > end:
             self.error_label1.config(fg='red')
             self.error_label1.config(text = 'Invalid value. Start must be less than or equal to end.')
             self.error_label1.grid(row=6, columnspan=3, sticky=W)

@@ -1,9 +1,9 @@
 class Synapse:
 
-    def __init__(self, first_neuron, second_neuron, s, g_syn, e_syn, period_length, time):
+    def __init__(self, first_neuron, second_neuron, s, g_syn, e_syn, step_size, time):
         self.first_neuron = first_neuron
         self.second_neuron = second_neuron
-        self.period_length = period_length
+        self.step_size = step_size
         self.time = time
 
         # threshold
@@ -18,7 +18,7 @@ class Synapse:
     # Sets the membrane voltage to the given value; needed to compute Isyn
     def set_membrane_voltage(self):
         neuron_output = self.first_neuron.get_output()
-        self.v_m = neuron_output[(int)(self.time/self.period_length)]
+        self.v_m = neuron_output[(int)(self.time/self.step_size)]
 
     # Computes the output of the synapse
     def i_syn(self):
@@ -30,7 +30,7 @@ class Synapse:
         self.set_membrane_voltage()
         neuron_input = self.second_neuron.get_input()
         neuron_output = self.first_neuron.get_output()
-        index = (int)(self.time/self.period_length)
-        neuron_input[(int)(self.time / self.period_length)] += neuron_output[index]
-        neuron_input[(int)(self.time/self.period_length)] += self.i_syn()
+        index = (int)(self.time/self.step_size)
+        neuron_input[(int)(self.time / self.step_size)] += neuron_output[index]
+        neuron_input[(int)(self.time/self.step_size)] += self.i_syn()
         self.second_neuron.set_input(neuron_input)
