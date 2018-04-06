@@ -15,10 +15,12 @@ class Synapse:
         # reversal potential (determines excitation/inhibition
         self.e_syn = e_syn
 
+        self.index = 0
+
     # Sets the membrane voltage to the given value; needed to compute Isyn
     def set_membrane_voltage(self):
         neuron_output = self.first_neuron.get_output()
-        self.v_m = neuron_output[(int)(self.time/self.step_size)]
+        self.v_m = neuron_output[self.index]
 
     # Sets the s parameter to off (0) when presynaptic membrane potential is < 20 mV or on (1) otherwise
     def set_s(self):
@@ -37,5 +39,6 @@ class Synapse:
         self.set_membrane_voltage()
         self.set_s()
         neuron_input = self.second_neuron.get_input()
-        neuron_input[(int)(self.time/self.step_size)] += self.i_syn()
+        neuron_input[self.index] += self.i_syn()
         self.second_neuron.set_input(neuron_input)
+        self.index += 1

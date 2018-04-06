@@ -1,7 +1,7 @@
 class Neuron:
 
     # This method initializes the neuron by setting the four IK parameters (a, b, c, and d) and the step size.
-    def __init__(self, a, b, c, d, input_array, step_size, time):
+    def __init__(self, a, b, c, d, initial_voltage, input_array, step_size, time):
         self.a = a
         self.b = b
         self.c = c
@@ -11,19 +11,23 @@ class Neuron:
         self.time = time
 
         # The potential (v)  and recovery (u) parameters are initialized as described in the IK model.
-        self.v = -70
-        self.u = -70 * b
+        self.v = initial_voltage
+        self.u = self.v * b
 
-        # An array is initialized to hold the frequency calculations, one for each 0.2 second interval.
+        # An array is initialized to hold the frequency calculations, one for each 0.000008 second interval.
         self.frequency = []
 
         # Since the biokinetic model always runs for 8.5 seconds, duration has been set to 8.5.
         self.duration = 8.5
 
         # This will hold the outputs from synapses for use in finding the next current
-        self.output = []
-        for i in range(0, (int)((1 / self.step_size) * self.duration)):
-            self.output.append(0)
+        self.output = [0]*(int((1 / self.step_size) * self.duration))
+        #for i in range(0, (int)((1 / self.step_size) * self.duration)):
+            #self.output.append(0)
+
+        self.v_arr = [] * 1250
+
+        self.index = 0
 
     # Returns the output as an array of currents at each time step
     def get_output(self):
@@ -40,9 +44,9 @@ class Neuron:
     # Sets the time to the given value and the current at this time to the given current
     def update(self, time):
         self.time = time
-        i = self.input_array[(int)(time/self.step_size) - 1]
         self.membrane_dt()
-        self.output[(int)(time/self.step_size)] = self.v
+        self.output[self.index] = self.v
+        self.index += 1
 
     # This method updates the u and v parameter values using euler's method.
     def run_eulers_method(self):
@@ -62,13 +66,7 @@ class Neuron:
         # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
         # 1000 to convert from ms to s.
         else:
-            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input_array[(int)(self.time/self.step_size) - 1]) * 1000))
+            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input_array[self.index - 1]) * 1000))
             self.u = self.eulers_method(self.u, ((self.a * ((self.b * self.v) - self.u)) * 1000))
         return
 
-    # This method returns the input current at the next time step.
-    def get_next_current(self, time):
-        if (int)(time/self.step_size) + 1 < (int)((1 / self.step_size)*(self.duration)):
-            return self.input_array[(int)(time/self.step_size) + 1] + self.output[(int)(time/self.step_size)]
-        else:
-            return self.output[(int)(time/self.step_size)]

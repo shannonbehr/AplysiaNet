@@ -41,6 +41,8 @@ class AplysiaNet:
 
         self.outputs = []
 
+        #self.index = 0
+
     def set_neurons(self, neurons):
         self.neurons = neurons
 
@@ -69,9 +71,16 @@ class AplysiaNet:
             self.selective_print(neuron.get_output())
             self.outputs.append(neuron.get_output())
 
+        int_arr = list(range((int)(8.5/0.000008)))
+        time_arr = [i * 0.000008 for i in int_arr]
+
+        output_arr = [time_arr] + self.outputs
+        output_arr = zip(*output_arr)
+
         # This currently writes the first 200 ms to a file.
-        for val in self.outputs:
-            writer.writerow(val[0:1250])
+        for i, val in enumerate(output_arr):
+            if i % 10 == 0:
+                writer.writerow(val)
 
         data_file.close()
 
@@ -81,6 +90,8 @@ class AplysiaNet:
 
     # Generates an array of chemical or mechanical input to a neuron given stimulus start and end times
     def handle_inputs(self, start, end, storage):
+        if start == end:
+            return
         for index in range(0, (int)((1 / self.step_size)*(self.duration))):
             if index*self.step_size < start or index*self.step_size > end:
                 storage[index] = 0
@@ -109,8 +120,8 @@ network.handle_inputs(inputs[2], inputs[3], mech_input)
 
 # This code builds the circuit. For now, it is a test circuit with two typical IK neurons and a single excitatory* synapse.
 # * the synapse hyperpolarizes too much. It should be excitatory with these params, but is mildly inhibitory instead.
-neuron1 = Neuron(0.006, 0.25, -65, 8, chem_input, 0.000008, 0)
-neuron2 = Neuron(0.006, 0.25, -65, 8, neuron2_input, 0.000008, 0)
+neuron1 = Neuron(0.006, 0.25, -65, 8, -64.4, chem_input, 0.000008, 0)
+neuron2 = Neuron(0.006, 0.25, -65, 8, -64.4, neuron2_input, 0.000008, 0)
 synapse = Synapse(neuron1, neuron2, 0, 10, 75, 0.000008, 0)
 neurons = [neuron1, neuron2]
 synapses = [synapse]
@@ -122,5 +133,7 @@ network.set_neurons_to_output(neurons)
 network.run()
 
 #TODO
-#sanity checks
-#downsampling
+#sanity checks 3-5
+#more downsampling
+#add current injection button/slider
+#clean up code!

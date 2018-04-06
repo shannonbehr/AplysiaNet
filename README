@@ -3,6 +3,12 @@ Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
 6 April 2018
+Bug fixes to Neuron and Synapse; false 0 issue resolved; file writing downsampled and 
+written to columns instead of rows; many figures from IK model replicated
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+6 April 2018
 This update contains several bug fixes; I spent an embarassingly long time wondering why
 synapses were working so poorly, and in the end, it was a small typo. Also fixed in
 synapses was a line that mistakenly added the presynaptic neuron's membrane voltage
