@@ -14,7 +14,7 @@ class Neuron:
         self.v = -70
         self.u = -70 * b
 
-        # An array is initialized to hold the 43 frequency calculations, one for each 0.2 second interval.
+        # An array is initialized to hold the frequency calculations, one for each 0.2 second interval.
         self.frequency = []
 
         # Since the biokinetic model always runs for 8.5 seconds, duration has been set to 8.5.
@@ -38,19 +38,15 @@ class Neuron:
         self.input_array = input_array
 
     # Sets the time to the given value and the current at this time to the given current
-    def update(self, time, i):
+    def update(self, time):
         self.time = time
         i = self.input_array[(int)(time/self.step_size) - 1]
-        #print(self.input_array)
-        #print(i)
-        self.membrane_potential_dt()
-        self.membrane_recovery_dt()
+        self.membrane_dt()
         self.output[(int)(time/self.step_size)] = self.v
 
     # This method updates the u and v parameter values using euler's method.
     def run_eulers_method(self):
-        self.membrane_potential_dt()
-        self.membrane_recovery_dt()
+        self.membrane_dt()
         return
 
     # This method computes the new voltage at each step. The following code was adapted from Tate Keller:
@@ -58,27 +54,15 @@ class Neuron:
         return prev_voltage + self.step_size * voltage_step
 
     # This method sets the membrane potential after euler's method. The following code was adapted from Tate Keller:
-    def membrane_potential_dt(self):
-        # If v is above the threshold, v is assigned the reset parameter c.
+    def membrane_dt(self):
+        # If v is above the threshold, v is assigned the reset parameter c and u is assigned u plus the recovery parameter d.
         if self.v >= 30:
             self.v = self.c
-
-        # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
-        # 1000 to convert from ms to s.
-        else:
-            # Changed index into input array to index - 1 since time has already been updated
-            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input_array[(int)(self.time/self.step_size) - 1]) * 1000))
-        return
-
-    # This method sets the membrane recovery after euler's method. The following code was adapted from Tate Keller:
-    def membrane_recovery_dt(self):
-        # If u is above the threshold, u is assigned u plus the recovery parameter d.
-        if self.u >= 30:
             self.u = self.u + self.d
-
         # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
         # 1000 to convert from ms to s.
         else:
+            self.v = self.eulers_method(self.v, (((0.04 * self.v**2) + (5 * self.v) + 140 - self.u + self.input_array[(int)(self.time/self.step_size) - 1]) * 1000))
             self.u = self.eulers_method(self.u, ((self.a * ((self.b * self.v) - self.u)) * 1000))
         return
 

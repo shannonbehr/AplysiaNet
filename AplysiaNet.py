@@ -3,6 +3,7 @@ from Neuron import Neuron
 from Synapse import Synapse
 from tkinter import *
 import csv
+import time
 
 class AplysiaNet:
 
@@ -12,6 +13,8 @@ class AplysiaNet:
         interface = Interface(root)
         while interface.get_status() == 'running':
             root.update()
+
+        self.start_time = time.time()
 
         # The input from the interface is stored here
         self.input = interface.get_input()
@@ -23,7 +26,7 @@ class AplysiaNet:
         self.step_size = 0.000008
 
         # The model starts at time = 0 seconds
-        self.time = 0
+        self.t = 0
 
         # The default value for current is 10
         self.current = 10
@@ -50,31 +53,31 @@ class AplysiaNet:
     def run(self):
         # Creates a .csv file for the data; TODO: file writing!
         data_file = open('AplysiaData.csv', 'w')
-        writer = csv.writer(data_file, dialect='excel-tab')
+        writer = csv.writer(data_file, lineterminator= '\n')
 
         # At each time step, update each neuron and run the output through the synapses to become the next inputs
         for index in range(0, (int)((1 / self.step_size)*(self.duration))):
             for neuron in self.neurons:
-                neuron.update(self.time, neuron.get_next_current(self.time))
+                neuron.update(self.t)
 
             for synapse in synapses:
-                synapse.update(self.time)
-            self.time += self.step_size
+                synapse.update(self.t)
+            self.t += self.step_size
 
         # This is for testing purposes; print the output of each neuron
         for neuron in self.neurons_to_output:
             self.selective_print(neuron.get_output())
             self.outputs.append(neuron.get_output())
-            # This worked a bit better than the current file writing system but isn't the right approach since I made the list nested:
-            #for val in neuron.get_output():
-                #writer.writerow([val])
 
-        # This doesn't work very well. There is too much data, and there seems to be a column limit in place, so things
-        # are not formatting correctly. It's also slowing things down significantly. I will see what I can cut out to pass
-        # into the biokinetic model.
-        writer.writerows(self.outputs)
+        # This currently writes the first 200 ms to a file.
+        for val in self.outputs:
+            writer.writerow(val[0:1250])
 
         data_file.close()
+
+        end_time = time.time()
+        total_time = end_time - self.start_time
+        print('Total time = %s seconds' % total_time)
 
     # Generates an array of chemical or mechanical input to a neuron given stimulus start and end times
     def handle_inputs(self, start, end, storage):
@@ -98,13 +101,9 @@ network = AplysiaNet()
 
 # This code gets the input from the user and translates into an input array for the network.
 inputs = network.input
-chem_input = []
-mech_input = []
-neuron2_input = []
-for i in range (0, (int)((1 / network.step_size)*(network.duration))):
-    chem_input.append(0)
-    mech_input.append(0)
-    neuron2_input.append(0)
+chem_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
+mech_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
+neuron2_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
 network.handle_inputs(inputs[0], inputs[1], chem_input)
 network.handle_inputs(inputs[2], inputs[3], mech_input)
 
@@ -112,7 +111,7 @@ network.handle_inputs(inputs[2], inputs[3], mech_input)
 # * the synapse hyperpolarizes too much. It should be excitatory with these params, but is mildly inhibitory instead.
 neuron1 = Neuron(0.006, 0.25, -65, 8, chem_input, 0.000008, 0)
 neuron2 = Neuron(0.006, 0.25, -65, 8, neuron2_input, 0.000008, 0)
-synapse = Synapse(neuron1, neuron2, 5, 10, 75, 0.000008, 0)
+synapse = Synapse(neuron1, neuron2, 0, 10, 75, 0.000008, 0)
 neurons = [neuron1, neuron2]
 synapses = [synapse]
 
@@ -123,5 +122,5 @@ network.set_neurons_to_output(neurons)
 network.run()
 
 #TODO
-#figure out why synapse parameters aren't generating expected behavior
 #sanity checks
+#downsampling

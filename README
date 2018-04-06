@@ -2,6 +2,34 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+6 April 2018
+This update contains several bug fixes; I spent an embarassingly long time wondering why
+synapses were working so poorly, and in the end, it was a small typo. Also fixed in
+synapses was a line that mistakenly added the presynaptic neuron's membrane voltage
+and a parameter, s, that needed to be repeatedly set during the run instead of the user.
+The model currently dumps the first 200 ms of both neurons into a csv. This is very
+useful for debugging but not useful for the end product, so I will decide how to down-
+sample soon. Some neuron updates were happening at the wrong times, so the equations
+were fixed and simplified. Finally, a lot of testing was done. Neurons that receive
+no input and are not set to spontaneously burst slowly change from their initial
+membrane potentials to their resting potentials, which is good- test 1 from last week
+is passed. 2 is also passed; the neuron behaves properly with the output from the first
+200 ms compared to the output from a known proper implementation of an IK neuron with
+the same parameters. 3 has not yet been tested. Neither have 4 or 5, but unofficial
+tests show promising results.
+The biggest challenge this week is a bug where the 8th and 258th elements of both
+neurons is 0. The location of the 0s is consistent across many runs, but there does not
+seem to be any repeateing pattern. I have tried to figure this out and am baffled.
+The wrong values don't seem to affect future time steps, but I am doing more debugging
+tomorrow, so it will hopefully still be fixed this week.
+Also, I have started thinking about efficiency. The current run time of my portion of
+the code with this very simple circuit is sitting at about 8 seconds. I have messed
+with data storage and resource allocation. Still, I'm concerned about the time, and I
+can't cut down on the number of calculations, so I will likely decrease precision on
+mathematical operations soon.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 30 March 2018
 The biggest change this week was changing the model from calculating every 0.25 seconds
 to calculating every 0.000008 seconds. This brought some pretty major scaleability
