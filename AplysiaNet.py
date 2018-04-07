@@ -19,6 +19,10 @@ class AplysiaNet:
         # The input from the interface is stored here
         self.input = interface.get_input()
 
+        # The current from the user input is stored here
+        self.current = interface.get_current()
+        print(self.current)
+
         # The model is set up to run for 8.5 seconds
         self.duration = 8.5
 
@@ -27,9 +31,6 @@ class AplysiaNet:
 
         # The model starts at time = 0 seconds
         self.t = 0
-
-        # The default value for current is 10
-        self.current = 10
 
         # This will store the neurons in the circuit
         self.neurons = []
@@ -41,8 +42,6 @@ class AplysiaNet:
 
         self.outputs = []
 
-        #self.index = 0
-
     def set_neurons(self, neurons):
         self.neurons = neurons
 
@@ -53,7 +52,7 @@ class AplysiaNet:
         self.neurons_to_output = neurons_to_output
 
     def run(self):
-        # Creates a .csv file for the data; TODO: file writing!
+        # Creates a .csv file for the data
         data_file = open('AplysiaData.csv', 'w')
         writer = csv.writer(data_file, lineterminator= '\n')
 
@@ -71,32 +70,40 @@ class AplysiaNet:
             self.selective_print(neuron.get_output())
             self.outputs.append(neuron.get_output())
 
+        # This handles the output data to be written
         int_arr = list(range((int)(8.5/0.000008)))
         time_arr = [i * 0.000008 for i in int_arr]
 
         output_arr = [time_arr] + self.outputs
         output_arr = zip(*output_arr)
 
-        # This currently writes the first 200 ms to a file.
+        # This currently writes every 10th time step to a file.
         for i, val in enumerate(output_arr):
             if i % 10 == 0:
                 writer.writerow(val)
 
         data_file.close()
 
+        # Computes and prints the total run time of the simulation
         end_time = time.time()
         total_time = end_time - self.start_time
         print('Total time = %s seconds' % total_time)
 
     # Generates an array of chemical or mechanical input to a neuron given stimulus start and end times
-    def handle_inputs(self, start, end, storage):
+    def handle_inputs(self, start, end, storage, type):
+        if type == 'chem':
+            current = self.current[0]
+        elif type == 'mech':
+            current = self.current[1]
+        else:
+            raise ValueError('Input type must be either chemical (chem) or mechanical (mech).')
         if start == end:
             return
         for index in range(0, (int)((1 / self.step_size)*(self.duration))):
             if index*self.step_size < start or index*self.step_size > end:
                 storage[index] = 0
             else:
-                storage[index] = self.current
+                storage[index] = current
 
     # Prints out an array of every 0.25 seconds; this is for testing purposes
     def selective_print(self, arr):
@@ -115,14 +122,14 @@ inputs = network.input
 chem_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
 mech_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
 neuron2_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
-network.handle_inputs(inputs[0], inputs[1], chem_input)
-network.handle_inputs(inputs[2], inputs[3], mech_input)
+network.handle_inputs(inputs[0], inputs[1], chem_input, 'chem')
+network.handle_inputs(inputs[2], inputs[3], mech_input, 'mech')
 
 # This code builds the circuit. For now, it is a test circuit with two typical IK neurons and a single excitatory* synapse.
 # * the synapse hyperpolarizes too much. It should be excitatory with these params, but is mildly inhibitory instead.
-neuron1 = Neuron(0.006, 0.25, -65, 8, -64.4, chem_input, 0.000008, 0)
-neuron2 = Neuron(0.006, 0.25, -65, 8, -64.4, neuron2_input, 0.000008, 0)
-synapse = Synapse(neuron1, neuron2, 0, 10, 75, 0.000008, 0)
+neuron1 = Neuron(0.006, 0.25, -65, 8, -70, chem_input, 0.000008)
+neuron2 = Neuron(0.006, 0.25, -65, 8, -70, neuron2_input, 0.000008)
+synapse = Synapse(neuron1, neuron2, 30, 75, 20, 0.000008)
 neurons = [neuron1, neuron2]
 synapses = [synapse]
 
@@ -133,7 +140,5 @@ network.set_neurons_to_output(neurons)
 network.run()
 
 #TODO
-#sanity checks 3-5
+#sanity checks 3-6
 #more downsampling
-#add current injection button/slider
-#clean up code!

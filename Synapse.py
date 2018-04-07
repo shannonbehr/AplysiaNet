@@ -1,20 +1,26 @@
 class Synapse:
 
-    def __init__(self, first_neuron, second_neuron, s, g_syn, e_syn, step_size, time):
+    def __init__(self, first_neuron, second_neuron, g_syn, e_syn, threshold, step_size):
         self.first_neuron = first_neuron
         self.second_neuron = second_neuron
         self.step_size = step_size
-        self.time = time
 
-        # threshold
-        self.s = s
+        # Time always starts at 0
+        self.time = 0
 
-        # 0 if synapse is off; weight of inputs if synapse is on
+        # 0 if synapse is off; weight of inputs if synapse is on; always starts at 0
+        self.s = 0
+
+        # Conductance
         self.g_syn = g_syn
 
-        # reversal potential (determines excitation/inhibition
+        # Reversal potential (determines excitation/inhibition
         self.e_syn = e_syn
 
+        # Threshold for synapse activation
+        self.threshold = threshold
+
+        # The index into the input and output arrays
         self.index = 0
 
     # Sets the membrane voltage to the given value; needed to compute Isyn
@@ -24,7 +30,7 @@ class Synapse:
 
     # Sets the s parameter to off (0) when presynaptic membrane potential is < 20 mV or on (1) otherwise
     def set_s(self):
-        if self.second_neuron.get_input()[(int)(self.time/self.step_size)] < 20:
+        if self.second_neuron.get_input()[(int)(self.time/self.step_size)] < self.threshold:
             self.s = 0
         else:
             self.s = 1

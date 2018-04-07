@@ -3,6 +3,27 @@ Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
 6 April 2018
+The GUI was updated to allow the user to input a current amount instead of the default
+value of 10. This is beyond the original design specifications for the standard GUI,
+but it arose out of a desire to more easily test different amounts of excitatory or
+inhibitory current, and I decided that it would be useful functionality to provide to
+the user as well.
+Other than this, I cleaned up and simplified some of the code, fixed comments, etc.
+A graph of my output with 10 current being injected to the presynaptic neuron will
+be uploaded to the documents portion of the server shortly. This output was validated
+against a known working IK model and matches perfectly. I have not made the circuit
+more complicated as specified in the Gantt chart for this week because I have been
+doing more testing on the simple circuit than expected, but since I'm fixing all the
+bugs now, I should be able to get back on target easily and expand the circuit in a
+relatively pain-free manner. I'm satisfied with the presynaptic neuron's behavior but
+intend to do more testing on spontaneous bursting and synapses before adding more
+elements. I plan to perform these tests and add more elements next week.
+Please read all 3 comments from 6 April in this document for descriptions of the work
+done during week 6.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+6 April 2018
 Bug fixes to Neuron and Synapse; false 0 issue resolved; file writing downsampled and 
 written to columns instead of rows; many figures from IK model replicated
 ----------------------------------------------------------------------------------------

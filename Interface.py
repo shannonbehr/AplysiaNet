@@ -13,29 +13,40 @@ class Interface:
         master.title('Aplysia Feeding Circuit Simulation')
 
         # Displays all of the initial text
-        self.label = Label(master, text='Input: Please enter values between 0 and 8.5.')
-        self.label.grid(columnspan=3, sticky=W)
-        self.label = Label(master, text='Chemical stimulus start:')
-        self.label.grid(row=1, columnspan=3, sticky=W)
-        self.label = Label(master, text='Chemical stimulus end:')
-        self.label.grid(row=2, columnspan=3, sticky=W)
-        self.label = Label(master, text='Mechanical stimulus start:')
-        self.label.grid(row=3, columnspan=3, sticky=W)
-        self.label = Label(master, text='Mechanical stimulus end:')
-        self.label.grid(row=4, columnspan=3, sticky=W)
+        self.label1 = Label(master, text='Input: Please enter values between 0 and 8.5.')
+        self.label1.grid(columnspan=3, sticky=W)
+        self.label2 = Label(master, text='Chemical stimulus start:')
+        self.label2.grid(row=1, columnspan=1, sticky=W)
+        self.label3 = Label(master, text='Chemical stimulus end:')
+        self.label3.grid(row=2, columnspan=1, sticky=W)
+        self.label4 = Label(master, text='Mechanical stimulus start:')
+        self.label4.grid(row=3, columnspan=1, sticky=W)
+        self.label5 = Label(master, text='Mechanical stimulus end:')
+        self.label5.grid(row=4, columnspan=1, sticky=W)
+        self.label6 = Label(master, text='Chemical stimulus current:')
+        self.label6.grid(row=1, column=3, columnspan=1, sticky=W)
+        self.label7 = Label(master, text='Mechanical stimulus current:')
+        self.label7.grid(row=3, column=3, columnspan=1, sticky=W)
         self.error_label1 = Label(master)
         self.error_label2 = Label(master)
         self.error_label3 = Label(master)
+        self.error_label4 = Label(master)
 
         # Sets up the text entry fields
         self.chem_start_entry = Entry(master)
         self.chem_end_entry = Entry(master)
         self.mech_start_entry = Entry(master)
         self.mech_end_entry = Entry(master)
-        self.chem_start_entry.grid(row=1, column=2, columnspan=3, sticky=W + E)
-        self.chem_end_entry.grid(row=2, column=2, columnspan=3, sticky=W + E)
-        self.mech_start_entry.grid(row=3, column=2, columnspan=3, sticky=W + E)
-        self.mech_end_entry.grid(row=4, column=2, columnspan=3, sticky=W + E)
+        self.chem_start_entry.grid(row=1, column=2, columnspan=1, sticky=W + E)
+        self.chem_end_entry.grid(row=2, column=2, columnspan=1, sticky=W + E)
+        self.mech_start_entry.grid(row=3, column=2, columnspan=1, sticky=W + E)
+        self.mech_end_entry.grid(row=4, column=2, columnspan=1, sticky=W + E)
+
+        # Sets up the current injection boxes
+        self.chem_current_entry = Entry(master)
+        self.mech_current_entry = Entry(master)
+        self.chem_current_entry.grid(row=1, column=4, columnspan=1, sticky=W + E)
+        self.mech_current_entry.grid(row=3, column=4, columnspan=1, sticky=W + E)
 
         # Configures the run and close buttons
         self.run_button = Button(master, text='Run', command=self.run)
@@ -51,11 +62,15 @@ class Interface:
     def get_input(self):
         return self.input
 
+    def get_current(self):
+        return self.current
+
     # This will eventually pass the stored input to AplysiaNet. Currently, it prints "running simulation."
     def run(self):
         self.error_label1.grid_forget()
         self.error_label2.grid_forget()
         self.error_label3.grid_forget()
+        self.error_label4.grid_forget()
         self.validate()
         print("Running simulation")
 
@@ -65,6 +80,9 @@ class Interface:
     def validate(self):
         # If any of the entered inputs are cannot be converted to floats, an error message is displayed,
         # and the screen is reset.
+
+        flag = 0
+
         try:
             self.chem_start = float(self.chem_start_entry.get())
             self.chem_end = float(self.chem_end_entry.get())
@@ -74,16 +92,26 @@ class Interface:
             self.error_label3.config(fg='red')
             self.error_label3.config(text='Bad cast. Please only enter numbers between 0 and 8.5.')
             self.error_label3.grid(row=8, columnspan=3, sticky=W)
-            self.reset()
+            flag = 1
+
+        try:
+            self.chem_current = float(self.chem_current_entry.get())
+            self.mech_current = float(self.mech_current_entry.get())
+        except ValueError:
+            self.error_label4.config(fg='red')
+            self.error_label4.config(text='Bad cast. Please only enter numbers.')
+            self.error_label4.grid(row=9, columnspan=3, sticky=W)
+            flag = 1
 
         # If one pair of inputs is somehow invalid, an error message is displayed, and the screen is reset.
-        if self.invalid(self.chem_start, self.chem_end) or self.invalid(self.mech_start, self.mech_end):
+        if self.invalid(self.chem_start, self.chem_end) or self.invalid(self.mech_start, self.mech_end) or flag:
             self.reset()
 
         # If everything is valid, the simulation can continue running.
         else:
             self.status = 'complete'
             self.input = [self.chem_start, self.chem_end, self.mech_start, self.mech_end]
+            self.current = [self.chem_current, self.mech_current]
             return
 
     # This method returns true if the given pair of inputs is invalid or false otherwise. It also shows error messages.

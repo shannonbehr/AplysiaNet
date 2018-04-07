@@ -1,14 +1,16 @@
 class Neuron:
 
     # This method initializes the neuron by setting the four IK parameters (a, b, c, and d) and the step size.
-    def __init__(self, a, b, c, d, initial_voltage, input_array, step_size, time):
+    def __init__(self, a, b, c, d, initial_voltage, input_array, step_size):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
         self.input_array = input_array
         self.step_size = step_size
-        self.time = time
+
+        # Time always starts at 0
+        self.time = 0
 
         # The potential (v)  and recovery (u) parameters are initialized as described in the IK model.
         self.v = initial_voltage
@@ -22,11 +24,8 @@ class Neuron:
 
         # This will hold the outputs from synapses for use in finding the next current
         self.output = [0]*(int((1 / self.step_size) * self.duration))
-        #for i in range(0, (int)((1 / self.step_size) * self.duration)):
-            #self.output.append(0)
 
-        self.v_arr = [] * 1250
-
+        # The index into the input and output arrays is initialized to 0
         self.index = 0
 
     # Returns the output as an array of currents at each time step
