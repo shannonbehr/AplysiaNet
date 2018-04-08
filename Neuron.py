@@ -1,13 +1,14 @@
 class Neuron:
 
     # This method initializes the neuron by setting the four IK parameters (a, b, c, and d) and the step size.
-    def __init__(self, a, b, c, d, initial_voltage, input_array, step_size):
+    def __init__(self, a, b, c, d, initial_voltage, input_array, step_size, name):
         self.a = a
         self.b = b
         self.c = c
         self.d = d
         self.input_array = input_array
         self.step_size = step_size
+        self.name = name
 
         # Time always starts at 0
         self.time = 0
@@ -27,6 +28,10 @@ class Neuron:
 
         # The index into the input and output arrays is initialized to 0
         self.index = 0
+
+    # Returns the output as an array of currents at each time step
+    def get_name(self):
+        return self.name
 
     # Returns the output as an array of currents at each time step
     def get_output(self):

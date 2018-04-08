@@ -2,6 +2,13 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+8 April 2018
+Midweek commit; I added a graph of the output from any neurons whose membrane potentials
+are being outputted to the .csv.
+Total run time right now before graphing is 7.4 seconds. Hoping to speed this up.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 6 April 2018
 The GUI was updated to allow the user to input a current amount instead of the default
 value of 10. This is beyond the original design specifications for the standard GUI,

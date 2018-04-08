@@ -144,4 +144,6 @@ class Interface:
         self.chem_end_entry.delete(0, 'end')
         self.mech_start_entry.delete(0, 'end')
         self.mech_end_entry.delete(0, 'end')
+        self.chem_current_entry.delete(0, 'end')
+        self.mech_current_entry.delete(0, 'end')
         return
