@@ -25,7 +25,7 @@ class Synapse:
 
     # Sets the membrane voltage to the given value; needed to compute Isyn
     def set_membrane_voltage(self):
-        neuron_output = self.first_neuron.get_output()
+        neuron_output = self.second_neuron.get_output()
         self.v_m = neuron_output[self.index]
 
     # Sets the s parameter to off (0) when presynaptic membrane potential is < the threshold or on (1) otherwise
@@ -37,7 +37,7 @@ class Synapse:
 
     # Computes the output of the synapse
     def i_syn(self):
-        return self.g_syn * self.s * (self.v_m - self.e_syn)
+        return self.g_syn * self.s * (self.e_syn - self.v_m)
 
     # At each time step, computes the output of the synapse
     def update(self, time):

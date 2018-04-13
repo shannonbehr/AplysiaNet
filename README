@@ -3,6 +3,17 @@ Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
 12 April 2018
+We realized why the standard synapse equation was not quite working; there was a typo
+in an email that led to me using the wrong input, and the standard convention for
+voltage adds a negative sign that this model does not have, which resulted in the sign
+being flipped. Now, e_syn=40 produces excitatory psps, e_syn=-90 produces inhibitory
+psps, and e_syn = the postsynaptic resting potential produces no psps; these behaviors
+are all desired. Aside from a few more tests, I should be ready to start implementing
+the actual circuit.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+12 April 2018
 This week was 99% research, but I am hoping to have a full circuit prototype for next
 week, whether it is in time for my poster or not. I replicated all of the figures from
 the Izhikevich paper; the figures can be found under documents. I had trouble

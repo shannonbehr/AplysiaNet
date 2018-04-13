@@ -185,7 +185,7 @@ neuron1 = Neuron(0.1, 0.3, -50, 2, -63.9, chem_input, step_size, 'Neuron1')
 #LTS: inject current at ~0.025
 #neuron1 = Neuron(0.02, 0.25, -65, 2, -64.4139, chem_input, step_size, 'LTS')
 neuron2 = Neuron(0.006, 0.25, -65, 8, -70, neuron2_input, step_size, 'Neuron2')
-synapse = Synapse(neuron1, neuron2, 2, 60, 10, step_size)
+synapse = Synapse(neuron1, neuron2, 2, -64.4, 10, step_size)
 neurons = [neuron1, neuron2]
 synapses = [synapse]
 
