@@ -13,8 +13,10 @@ class Interface:
         master.title('Aplysia Feeding Circuit Simulation')
 
         # Displays all of the initial text
-        self.label1 = Label(master, text='Input: Please enter values between 0 and 8.5.')
-        self.label1.grid(columnspan=3, sticky=W)
+        self.label0 = Label(master, text='Input: Please enter values between 0 and 8.5.')
+        self.label0.grid(row=0, columnspan=3, sticky=W)
+        self.label1 = Label(master, text='Please enter values between -10 and 10 for best results.')
+        self.label1.grid(row=0, column=3, columnspan=2, sticky=W)
         self.label2 = Label(master, text='Chemical stimulus start:')
         self.label2.grid(row=1, columnspan=1, sticky=W)
         self.label3 = Label(master, text='Chemical stimulus end:')

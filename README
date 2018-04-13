@@ -2,6 +2,30 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+12 April 2018
+This week was 99% research, but I am hoping to have a full circuit prototype for next
+week, whether it is in time for my poster or not. I replicated all of the figures from
+the Izhikevich paper; the figures can be found under documents. I had trouble
+rigorously testing the last three because the paper used varying current amounts
+(currently not supported) and did not specify the magnitude or time scale of the
+currents. After much testing, however, I am confident that neurons are working well. I
+also tested synapses, and I am much less happy with them. I have been waiting on a
+response from a collaborator that might help clarify the issue, but for now, I cannot
+really proceed until we are sure that individual synapses are working properly. I am
+concerned that the parameters for exitation/inhibition don't make sense and that the
+postsynaptic neuron hyperpolarizes too much between spikes. I hope to get this working
+within the next few days so I can move on.
+On the bright side, I played around a lot with time step parameters. The new parameter
+is 0.00001 seconds instead of 0.000008 seconds, so fewer calculations are being run.
+I rigorously tested everything against the data we have (data from other simulations,
+biological data, and the original IK figures) and the new time step does not impede
+accuracy at all. It might need to eventually change back depending on the synchron-
+ization mechanism between my work and Tate's; I am waiting on him to make a few
+implementation decisions before I can finalize my own. For now, though, the time step
+works great and has cut runtime from 7.4 seconds to 0.6 seconds, a huge decrease.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 8 April 2018
 Midweek commit; I added a graph of the output from any neurons whose membrane potentials
 are being outputted to the .csv.

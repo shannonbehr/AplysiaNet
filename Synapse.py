@@ -28,9 +28,9 @@ class Synapse:
         neuron_output = self.first_neuron.get_output()
         self.v_m = neuron_output[self.index]
 
-    # Sets the s parameter to off (0) when presynaptic membrane potential is < 20 mV or on (1) otherwise
+    # Sets the s parameter to off (0) when presynaptic membrane potential is < the threshold or on (1) otherwise
     def set_s(self):
-        if self.second_neuron.get_input()[(int)(self.time/self.step_size)] < self.threshold:
+        if self.first_neuron.get_output()[self.index] < self.threshold:
             self.s = 0
         else:
             self.s = 1
@@ -42,8 +42,8 @@ class Synapse:
     # At each time step, computes the output of the synapse
     def update(self, time):
         self.time = time
-        self.set_membrane_voltage()
         self.set_s()
+        self.set_membrane_voltage()
         neuron_input = self.second_neuron.get_input()
         neuron_input[self.index] += self.i_syn()
         self.second_neuron.set_input(neuron_input)
