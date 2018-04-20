@@ -2,6 +2,18 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+20 April 2018
+Started implementing the circuit this week; more specifically, I worked on the half-
+center oscillator, or the pair of mutually inhibitory neurons that will drive the CPG.
+I spent a lot of time setting parameters, so not much code has changed. Unfortunately,
+the period is way too long, and I can't seem to shorten it. This likely means that I
+will need to change the basic synapse to the plastic synapse originally proposed as a
+stretch goal. It shouldn't be too bad; hopefully it'll be done next week. That just
+leaves one week for the full circuit, but the simple synapse probably won't work now
+that I've tried it. The current HCO will be uploaded to the documents section.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 12 April 2018
 We realized why the standard synapse equation was not quite working; there was a typo
 in an email that led to me using the wrong input, and the standard convention for

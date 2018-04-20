@@ -164,11 +164,10 @@ neuron2_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
 network.handle_inputs(inputs[0], inputs[1], chem_input, 'chem')
 network.handle_inputs(inputs[2], inputs[3], mech_input, 'mech')
 
-# This code builds the circuit. For now, it is a test circuit with two typical IK neurons and a single excitatory* synapse.
-# * the synapse hyperpolarizes too much. It should be excitatory with these params, but is mildly inhibitory instead.
+# This code builds the circuit.
 #Test neurons, non bursting and intrincisally bursting:
 #neuron1 = Neuron(0.006, 0.25, -65, 8, -70, chem_input, step_size, 'Neuron1')
-neuron1 = Neuron(0.1, 0.3, -50, 2, -63.9, chem_input, step_size, 'Neuron1')
+#neuron1 = Neuron(0.1, 0.3, -50, 2, -63.9, chem_input, step_size, 'Neuron1')
 #The following test neurons are from the IK paper. The duration was estimated to be 236.3636 ms or 0.23636 s.
 #RS: inject current at ~0.025
 #neuron1 = Neuron(0.02, 0.2, -65, 8, -70, chem_input, step_size, 'RS')
@@ -184,17 +183,16 @@ neuron1 = Neuron(0.1, 0.3, -50, 2, -63.9, chem_input, step_size, 'Neuron1')
 #neuron1 = Neuron(0.1, 0.25, -65, 2, -64.4139 , chem_input, step_size, 'RZ')
 #LTS: inject current at ~0.025
 #neuron1 = Neuron(0.02, 0.25, -65, 2, -64.4139, chem_input, step_size, 'LTS')
-neuron2 = Neuron(0.006, 0.25, -65, 8, -70, neuron2_input, step_size, 'Neuron2')
-synapse = Synapse(neuron1, neuron2, 2, -64.4, 10, step_size)
-neurons = [neuron1, neuron2]
-synapses = [synapse]
+#neuron2 = Neuron(0.006, 0.25, -65, 8, -70, neuron2_input, step_size, 'Neuron2')
+hco1 = Neuron(0.0005, 0.3, -65, 0.001, -90, chem_input, step_size, 'HCONeuron1')
+hco2 = Neuron(0.0005, 0.3, -65, 0.001, -58, neuron2_input, step_size, 'HCONeuron2')
+synapse1 = Synapse(hco1, hco2, 10, -120, 10, step_size)
+synapse2 = Synapse(hco2, hco1, 10, -120, 10, step_size)
+neurons = [hco1, hco2]
+synapses = [synapse1, synapse2]
 
 # The neurons and synapses are given to the network, and the simulation runs.
 network.set_neurons(neurons)
 network.set_synapses(synapses)
 network.set_neurons_to_output(neurons)
 network.run()
-
-#TODO
-#sanity checks 3-6
-#speed up the math?
