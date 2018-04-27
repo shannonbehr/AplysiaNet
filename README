@@ -3,6 +3,15 @@ Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
 27 April 2018
+Added more synapses from the HCO to be passed to the muscles, as well as an additional
+class that generates G values without needing a postsynaptic neuron. The synapse file
+generated will be tested with the muscle model soon. Run time is awful, but there's
+only so much possible optimization since the model is now running at least twice as
+many differential equations as before.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+27 April 2018
 Implemented synapses with memory; this was necessary to get a better half-center
 oscillator. This part of the circuit (currently functioning as an oversimplified CPG)
 can be linked to the muscles in the next few days to test its functionality. After

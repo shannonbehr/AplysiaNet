@@ -1,6 +1,6 @@
 from Interface import Interface
 from Neuron import Neuron
-from Synapse import Synapse
+from Synapse import Synapse, GSynapse
 from tkinter import *
 import csv
 import time
@@ -189,12 +189,15 @@ hco1 = Neuron(0.0005, 0.3, -65, 0.1, -70, chem_input, step_size, 'PC')
 hco2 = Neuron(0.0005, 0.3, -65, 0.1, -58, neuron2_input, step_size, 'RC')
 synapse1 = Synapse(hco1, hco2, 1.5, -80, 10, 20, 20, step_size)
 synapse2 = Synapse(hco2, hco1, 1.5, -80, 10, 20, 20, step_size)
+synapse3 = GSynapse(hco1, 1.5, 40, 10, 20, 20, step_size)
+synapse4 = GSynapse(hco2, 1.5, 40, 10, 20, 20, step_size)
 neurons = [hco1, hco2]
-synapses = [synapse1, synapse2]
+synapses = [synapse1, synapse2, synapse3, synapse4]
+gsynapses = [synapse3, synapse4, synapse4, synapse4]
 
 # The neurons and synapses are given to the network, and the simulation runs.
 network.set_neurons(neurons)
 network.set_synapses(synapses)
 network.set_neurons_to_output(neurons)
-network.set_synapses_to_output(synapses)
+network.set_synapses_to_output(gsynapses)
 network.run()
