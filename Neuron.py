@@ -67,6 +67,7 @@ class Neuron:
         if self.v >= 30:
             self.v = self.c
             self.u = self.u + self.d
+
         # If v is not above the threshold, euler's method is performed, and the step being passed in is multiplied by
         # 1000 to convert from ms to s.
         else:

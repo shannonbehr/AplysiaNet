@@ -2,6 +2,16 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+27 April 2018
+Implemented synapses with memory; this was necessary to get a better half-center
+oscillator. This part of the circuit (currently functioning as an oversimplified CPG)
+can be linked to the muscles in the next few days to test its functionality. After
+synapses were redone, more parameter setting was undertaken. The new HCO will be on
+the server. Additionally, g values for synapses (formerly s values) were written to a
+file at each time step where one of them changed.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 20 April 2018
 Started implementing the circuit this week; more specifically, I worked on the half-
 center oscillator, or the pair of mutually inhibitory neurons that will drive the CPG.

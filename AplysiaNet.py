@@ -53,18 +53,37 @@ class AplysiaNet:
     def set_neurons_to_output(self, neurons_to_output):
         self.neurons_to_output = neurons_to_output
 
+    def set_synapses_to_output(self, synapses_to_output):
+        self.synapses_to_output = synapses_to_output
+
     def run(self):
         # Creates a .csv file for the data
         data_file = open('AplysiaData.csv', 'w')
         writer = csv.writer(data_file, lineterminator= '\n')
 
+        # Creates a .csv file for the synapse data
+        syn_file = open('SynapseData.csv', 'w')
+        syn_writer = csv.writer(syn_file, lineterminator='\n')
+
         # At each time step, update each neuron and run the output through the synapses to become the next inputs
         for index in range(0, (int)((1 / self.step_size)*(self.duration))):
+            g_values = [self.t]
+            write_g = 0
+
             for neuron in self.neurons:
                 neuron.update(self.t)
 
             for synapse in synapses:
                 synapse.update(self.t)
+
+            for synapse in self.synapses_to_output:
+                g_values.append(synapse.get_g())
+                if synapse.write_g():
+                    write_g = 1
+
+            if write_g:
+                syn_writer.writerow(g_values)
+
             self.t += self.step_size
 
         # This is for testing purposes; print the output of each neuron
@@ -79,18 +98,19 @@ class AplysiaNet:
         output_arr = [self.time_arr] + self.outputs
         output_arr = zip(*output_arr)
 
-        # This currently writes every 10th time step to a file.
-        for i, val in enumerate(output_arr):
-            if i % 10 == 0:
-                writer.writerow(val)
+        # This writes every 10th time step to a file if uncommented.
+        #for i, val in enumerate(output_arr):
+            #if i % 10 == 0:
+                #writer.writerow(val)
 
         # Computes and prints the total run time of the simulation minus graphing
         end_time = time.time()
         total_time = end_time - self.start_time
         print('Total time = %s seconds' % total_time)
 
-        # Closes the data file
+        # Closes the data files
         data_file.close()
+        syn_file.close()
 
         # Creates the graph and displays it
         self.graph()
@@ -151,7 +171,7 @@ class AplysiaNet:
         # Displays the graph
         plt.show()
 
-step_size = 0.0001
+step_size = 0.00001 #0.000008
 
 # Creates the network.
 network = AplysiaNet(8.5, step_size)
@@ -165,29 +185,10 @@ network.handle_inputs(inputs[0], inputs[1], chem_input, 'chem')
 network.handle_inputs(inputs[2], inputs[3], mech_input, 'mech')
 
 # This code builds the circuit.
-#Test neurons, non bursting and intrincisally bursting:
-#neuron1 = Neuron(0.006, 0.25, -65, 8, -70, chem_input, step_size, 'Neuron1')
-#neuron1 = Neuron(0.1, 0.3, -50, 2, -63.9, chem_input, step_size, 'Neuron1')
-#The following test neurons are from the IK paper. The duration was estimated to be 236.3636 ms or 0.23636 s.
-#RS: inject current at ~0.025
-#neuron1 = Neuron(0.02, 0.2, -65, 8, -70, chem_input, step_size, 'RS')
-#IB: inject current at ~0.025
-#neuron1 = Neuron(0.02, 0.2, -55, 4, -70, chem_input, step_size, 'IB')
-#CH: inject current at ~0.025
-#neuron1 = Neuron(0.02, 0.2, -50, 2, -70, chem_input, step_size, 'CH')
-#FS: inject current at ~0.025
-#neuron1 = Neuron(0.1, 0.2, -65, 2, -70, chem_input, step_size, 'FS')
-#TC: inject current at ~0.05, I = 3; also test with -87 initial voltage?? inhibitory current? figure is unclear
-#neuron1 = Neuron(0.02, 0.25, -65, 0.05, -64.4139, chem_input, step_size, 'TC')
-#RZ: inject current at ~0.0125; some precision lost because IK changes the current magnitude during sim- would test manually
-#neuron1 = Neuron(0.1, 0.25, -65, 2, -64.4139 , chem_input, step_size, 'RZ')
-#LTS: inject current at ~0.025
-#neuron1 = Neuron(0.02, 0.25, -65, 2, -64.4139, chem_input, step_size, 'LTS')
-#neuron2 = Neuron(0.006, 0.25, -65, 8, -70, neuron2_input, step_size, 'Neuron2')
-hco1 = Neuron(0.0005, 0.3, -65, 0.001, -90, chem_input, step_size, 'HCONeuron1')
-hco2 = Neuron(0.0005, 0.3, -65, 0.001, -58, neuron2_input, step_size, 'HCONeuron2')
-synapse1 = Synapse(hco1, hco2, 10, -120, 10, step_size)
-synapse2 = Synapse(hco2, hco1, 10, -120, 10, step_size)
+hco1 = Neuron(0.0005, 0.3, -65, 0.1, -70, chem_input, step_size, 'PC')
+hco2 = Neuron(0.0005, 0.3, -65, 0.1, -58, neuron2_input, step_size, 'RC')
+synapse1 = Synapse(hco1, hco2, 1.5, -80, 10, 20, 20, step_size)
+synapse2 = Synapse(hco2, hco1, 1.5, -80, 10, 20, 20, step_size)
 neurons = [hco1, hco2]
 synapses = [synapse1, synapse2]
 
@@ -195,4 +196,5 @@ synapses = [synapse1, synapse2]
 network.set_neurons(neurons)
 network.set_synapses(synapses)
 network.set_neurons_to_output(neurons)
+network.set_synapses_to_output(synapses)
 network.run()
