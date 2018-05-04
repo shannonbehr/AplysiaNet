@@ -3,6 +3,17 @@ Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
 4 May 2018
+Final commit. After more parameter setting, we have reached the best outcome with the
+current implementation. The mdoel is capable of generating no behavior (no input), bites
+(chemical input only), and swallow-like behaviors (chemical and mechanical input). The
+swallows don't have long enough protraction to actually activate the muscles, but this
+would have to be fixed through a much more advanced implementation, probably involving
+dynamic parameter modulation. This fulfills the main goals of the project and is a good
+base to extend later.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+4 May 2018
 Tentative final commit. This week, I added sensory neurons (the final elements in the
 circuit) and did more parameter setting. After much experimentation, it seems like the
 synapse parameters I have now are ideal unless I want to totally redesign the HCO. It

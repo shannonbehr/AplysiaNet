@@ -62,7 +62,7 @@ class AplysiaNet:
         writer = csv.writer(data_file, lineterminator= '\n')
 
         # Creates a .csv file for the synapse data
-        syn_file = open('SynapseData.txt', 'w')
+        syn_file = open('SlugInput2.txt', 'w')
         syn_writer = csv.writer(syn_file, delimiter='\t', lineterminator='\n')
 
         syn_writer.writerow(['Time', 'PC', 'RC', 'CC', 'HC'])
@@ -193,15 +193,15 @@ chem = Neuron(0.02, 0.2, -65, 8, -70, chem_input, step_size, 'chem')
 mech = Neuron(0.02, 0.2, -65, 8, -70, mech_input, step_size, 'mech')
 PC = Neuron(0.0005, 0.3, -65, 0.1, -70, pc_input, step_size, 'PC')
 RC = Neuron(0.0005, 0.3, -65, 0.1, -70, rc_input, step_size, 'RC')
-synapse1 = Synapse(PC, RC, 1.5, -80, 10, 20.5, 20, step_size)
-synapse2 = Synapse(RC, PC, 1.5, -80, 10, 20.5, 20, step_size)
-synapse3 = GSynapse(PC, 0.2, 40, 10, 20, 20, step_size)
-synapse4 = GSynapse(RC, 0.2, 40, 10, 20, 20, step_size)
-synapse5 = Synapse(chem, PC, 0.05, 40, 10, 20, 20, step_size)
-synapse6 = Synapse(mech, RC, 0.03, 40, 10, 20, 20, step_size)
+hco1 = Synapse(PC, RC, 1.5, -80, 10, 21, 20, step_size)
+hco2 = Synapse(RC, PC, 1.5, -80, 10, 21, 20, step_size)
+out1 = GSynapse(PC, 0.2, 40, 10, 20, 20, step_size)
+out2 = GSynapse(RC, 0.2, 40, 10, 20, 20, step_size)
+chemin = Synapse(chem, RC, 0.01, -90, 10, 20, 20, step_size)
+mechin = Synapse(mech, PC, 0.035, -90, 10, 20, 20, step_size)
 neurons = [chem, mech, PC, RC]
-synapses = [synapse1, synapse2, synapse3, synapse4, synapse5, synapse6]
-gsynapses = [synapse3, synapse4, synapse4, synapse4]
+synapses = [hco1, hco2, out1, out2, chemin, mechin]
+gsynapses = [out1, out2, out2, out2]
 
 # The neurons and synapses are given to the network, and the simulation runs.
 network.set_neurons(neurons)
