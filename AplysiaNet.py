@@ -62,8 +62,10 @@ class AplysiaNet:
         writer = csv.writer(data_file, lineterminator= '\n')
 
         # Creates a .csv file for the synapse data
-        syn_file = open('SynapseData.csv', 'w')
-        syn_writer = csv.writer(syn_file, lineterminator='\n')
+        syn_file = open('SynapseData.txt', 'w')
+        syn_writer = csv.writer(syn_file, delimiter='\t', lineterminator='\n')
+
+        syn_writer.writerow(['Time', 'PC', 'RC', 'CC', 'HC'])
 
         # At each time step, update each neuron and run the output through the synapses to become the next inputs
         for index in range(0, (int)((1 / self.step_size)*(self.duration))):
@@ -86,9 +88,10 @@ class AplysiaNet:
 
             self.t += self.step_size
 
-        # This is for testing purposes; print the output of each neuron
+        # Handle the neuron outputs
         for neuron in self.neurons_to_output:
-            self.selective_print(neuron.get_output())
+            # The following line can be uncommented to print a subset of the neuron voltages
+            #self.selective_print(neuron.get_output())
             self.outputs.append(neuron.get_output())
 
         # This handles the output data to be written
@@ -171,7 +174,7 @@ class AplysiaNet:
         # Displays the graph
         plt.show()
 
-step_size = 0.00001 #0.000008
+step_size = 0.00001 # original step: 0.000008
 
 # Creates the network.
 network = AplysiaNet(8.5, step_size)
@@ -180,19 +183,24 @@ network = AplysiaNet(8.5, step_size)
 inputs = network.input
 chem_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
 mech_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
-neuron2_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
+pc_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
+rc_input = [0]*((int)((1 / network.step_size)*(network.duration)) + 1)
 network.handle_inputs(inputs[0], inputs[1], chem_input, 'chem')
 network.handle_inputs(inputs[2], inputs[3], mech_input, 'mech')
 
 # This code builds the circuit.
-hco1 = Neuron(0.0005, 0.3, -65, 0.1, -70, chem_input, step_size, 'PC')
-hco2 = Neuron(0.0005, 0.3, -65, 0.1, -58, neuron2_input, step_size, 'RC')
-synapse1 = Synapse(hco1, hco2, 1.5, -80, 10, 20, 20, step_size)
-synapse2 = Synapse(hco2, hco1, 1.5, -80, 10, 20, 20, step_size)
-synapse3 = GSynapse(hco1, 1.5, 40, 10, 20, 20, step_size)
-synapse4 = GSynapse(hco2, 1.5, 40, 10, 20, 20, step_size)
-neurons = [hco1, hco2]
-synapses = [synapse1, synapse2, synapse3, synapse4]
+chem = Neuron(0.02, 0.2, -65, 8, -70, chem_input, step_size, 'chem')
+mech = Neuron(0.02, 0.2, -65, 8, -70, mech_input, step_size, 'mech')
+PC = Neuron(0.0005, 0.3, -65, 0.1, -70, pc_input, step_size, 'PC')
+RC = Neuron(0.0005, 0.3, -65, 0.1, -70, rc_input, step_size, 'RC')
+synapse1 = Synapse(PC, RC, 1.5, -80, 10, 20.5, 20, step_size)
+synapse2 = Synapse(RC, PC, 1.5, -80, 10, 20.5, 20, step_size)
+synapse3 = GSynapse(PC, 0.2, 40, 10, 20, 20, step_size)
+synapse4 = GSynapse(RC, 0.2, 40, 10, 20, 20, step_size)
+synapse5 = Synapse(chem, PC, 0.05, 40, 10, 20, 20, step_size)
+synapse6 = Synapse(mech, RC, 0.03, 40, 10, 20, 20, step_size)
+neurons = [chem, mech, PC, RC]
+synapses = [synapse1, synapse2, synapse3, synapse4, synapse5, synapse6]
 gsynapses = [synapse3, synapse4, synapse4, synapse4]
 
 # The neurons and synapses are given to the network, and the simulation runs.

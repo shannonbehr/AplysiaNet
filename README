@@ -2,6 +2,22 @@ Biomechanical Aplysia feeding model
 Author: Shannon Stork
 
 ----------------------------------------------------------------------------------------
+4 May 2018
+Tentative final commit. This week, I added sensory neurons (the final elements in the
+circuit) and did more parameter setting. After much experimentation, it seems like the
+synapse parameters I have now are ideal unless I want to totally redesign the HCO. It
+turns out that changing some major implementation details might be necessary to get
+closer to the biology. That said, without the sensory neurons involved, output from
+my HCO linked to model muscles to produce a higher fitness than seen in the previous,
+hard-coded inputs before this project began. This model neural network, then, has
+already generated some insight into the biological circuit. Since this is an ongoing
+project, I plan to continue improving it, but this version is capable of generating
+bites with chemical stimulus or not biting with no stimulus. The runtime is very slow,
+but that cannot be avoided without compromising the utility. All other main goals are
+met.
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
 27 April 2018
 Added more synapses from the HCO to be passed to the muscles, as well as an additional
 class that generates G values without needing a postsynaptic neuron. The synapse file

@@ -3,7 +3,6 @@ from tkinter import *
 class Interface:
 
     # The constructor. Currently, only standard mode is supported.
-    # Args: Tk master
     def __init__(self, master):
 
         self.status = 'running'
